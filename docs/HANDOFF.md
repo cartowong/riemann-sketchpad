@@ -9,7 +9,7 @@
 - **Code:** Both checkpoints complete. Full application (`geometry/`, `model/`, `persistence/`, `ui/`, `export/`) implemented.
 - **Git:** Repository initialized. `.claude/` is gitignored (except `.claude/skills/`).
 - **Spec:** `docs/SPEC.md` and `docs/GEOMETRY.md` describe the full application design.
-- **CI:** GitHub Actions `ci.yml` for running tests on PRs. Release workflow deferred.
+- **CI:** GitHub Actions `ci.yml` for running tests on PRs. `release.yml` builds macOS (.dmg) and Windows (.msi) installers on `v*` tag push.
 
 ## Planned Package Structure
 

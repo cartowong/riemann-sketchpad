@@ -4,10 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.0.0] - Unreleased
+## [1.0.0] - 2026-11-16
 
 ### Added
 
+- GitHub Actions release workflow for building macOS (.dmg) and Windows (.msi) installers on version tag push
 - AngleTool preview: green arc sector shown during 3rd-point selection, with intersection ghost dots
 - RegionTool preview: geodesic arc edges between placed vertices, preview arc to cursor, yellow arc-filled polygon and highlighted first vertex on close hover, with intersection ghost dots
 - Construction application preview now renders Angle (arc sector) and Region (filled polygon) objects, matching EuclidSketchpad's 4-pass preview rendering
