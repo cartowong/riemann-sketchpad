@@ -735,6 +735,23 @@ Both PNG and SVG exports share the same rendering logic:
 
 Produces 4 files: `<name>_canvas.png/svg` (default 700px diameter), `<name>_custom.png/svg` (1920px diameter). All exports use white-on-gray background, no grid.
 
+### 12.7 PDF Export (Planned — v1.1.0, not yet implemented)
+
+Agreed design for adding PDF as a third export format (mirrors Euclid Sketchpad §12.7, adapted to the sphere):
+
+- **Library**: Apache PDFBox 3.x (Apache 2.0) draws true vector output: paths, Bézier curves, dash patterns, fill and stroke transparency, text. Add it to `build.gradle.kts`, add its notice to `THIRD_PARTY_NOTICES`, and check that it runs within the hardcoded jpackage modules (`java.base`, `java.desktop`, `java.logging`, `jdk.unsupported`).
+- **Shared SVG/PDF rendering walker**: refactor the SVG half of `ExportRenderer` so that the grid (meridians/parallels), the 5-pass object logic, front/back split rendering (`buildSvgSplitArcs`), and the 0.3 back-face opacity are written once. They will call a small internal drawing interface (line, elliptical arc, ellipse, path with fill/alpha, text, dash) with SVG and PDF backends. PNG stays on `GeometryRenderer` + `Node.snapshot()` as today. Before refactoring, add snapshot tests for SVG output so the refactor can be checked for regressions.
+- **Elliptical arcs**: PDF has no arc operator, so the PDF backend converts each rotated elliptical arc (`radiusX`, `radiusY`, `xAxisRotation`, flags) into cubic Bézier segments (≤ 90° each).
+- **Page size**: one page of exactly W×H points, matching the exported pixel dimensions 1:1 (Diameter×Diameter for Canvas, Width×Height for Custom; same semantics as SVG). No paper-size options.
+- **Transparent background**: applies to PDF as it does to SVG. When checked, no gray exterior or white background is drawn (the sphere disk is still drawn).
+- **Include back face**: honored exactly as in SVG.
+- **Label font**: DejaVu Sans (bundled TTF in `src/main/resources/fonts/`, license added to `THIRD_PARTY_NOTICES`), embedded via `PDType0Font.load()` so only the glyphs used are included. Same font in all three sister projects. Characters the font lacks (e.g. CJK, emoji) are replaced with `?` and the export shows a warning rather than failing. PNG and SVG label fonts are unchanged.
+- **Dialog**: add a third Format radio button (PDF) and a `*.pdf` file-chooser filter. Replace the `format` string with an `ExportFormat` enum.
+- **Headless export**: produces 6 files (2 methods × PNG/SVG/PDF). Update the "4 files" messages and the project skill docs.
+- **Release**: ships as v1.1.0 with CHANGELOG, README feature list, and HANDOFF updates.
+
+**Still open:** PDF metadata (title, creator) and the PDF test approach (for example, parsing the output back with PDFBox).
+
 ---
 
 ## 13. Back-Face Rendering

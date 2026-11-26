@@ -214,3 +214,7 @@ Two bugs in `HitTester.isPointInAngleSector()`: (1) `mouseAngle` used Y-up conve
 ### ~~5. Geodesic/circle hit-testing matches back-face portions~~ (Fixed)
 
 `distanceToEllipseFrontHalf()` computed `modelZ = sqrt(1 - r²)` which is always positive inside the disk, so the `if (modelZ <= 0) continue` check never filtered anything. Root cause: screen-space points on a projected ellipse correspond to two 3D sphere points (front and back), so front-hemisphere filtering cannot be done from screen coordinates alone. Fixed by rewriting `distanceToGeodesic()` and `distanceToCircle()` to sample curves in 3D (using `circlePlaneBasis()` to get an orthonormal basis), call `isOnFrontHemisphere()` on the actual 3D point, then project to screen for distance measurement.
+
+### 6. PDF export not implemented yet (Planned)
+
+The agreed design is in `docs/SPEC.md` §12.7. It uses PDFBox and a shared SVG/PDF rendering walker, with SVG snapshot tests added first; PNG stays on `GeometryRenderer`. Pages are W×H points, and headless export writes 6 files. Targets v1.1.0. Labels use embedded DejaVu Sans. Still open: PDF metadata and the PDF test approach.
