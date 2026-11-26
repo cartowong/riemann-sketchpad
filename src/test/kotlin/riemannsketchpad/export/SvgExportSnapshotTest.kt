@@ -3,7 +3,6 @@ package riemannsketchpad.export
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
-import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.util.Locale
 
@@ -13,9 +12,6 @@ import java.util.Locale
  */
 class SvgExportSnapshotTest {
 
-    @TempDir
-    lateinit var tempDir: File
-
     @TestFactory
     fun `svg export matches golden files`(): List<DynamicTest> {
         // The SVG writer formats numbers with the default locale.
@@ -23,7 +19,8 @@ class SvgExportSnapshotTest {
         val update = System.getenv("UPDATE_GOLDENS") == "true"
         return ExportTestDiagrams.cases().map { case ->
             DynamicTest.dynamicTest(case.name) {
-                val out = File(tempDir, "${case.name}.svg")
+                // Kept under build/ (not a temp dir) so CI can upload them when a snapshot differs.
+                val out = File("build/snapshot-actual/${case.name}.svg").also { it.parentFile.mkdirs() }
                 ExportRenderer.exportSvg(
                     out, case.manager, case.viewMatrix, case.displayScale, case.centerX, case.centerY,
                     case.width, case.height, case.transparent, case.includeGrid, case.includeBackFace
