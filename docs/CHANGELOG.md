@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- PDF export (third format alongside PNG and SVG): vector output via Apache PDFBox, one page of exactly W×H points, back-face and transparent-background options honored, labels in embedded DejaVu Sans (unsupported characters replaced with `?` and reported in a warning), Creator/Title metadata
+- Headless `--export` now writes 6 files (canvas/custom × PNG/SVG/PDF)
+- SVG export snapshot tests and PDF export tests
+
+### Changed
+
+- SVG and PDF export share one rendering walker; SVG output is unchanged
+
 ## [1.0.0] - 2026-11-16
 
 ### Added

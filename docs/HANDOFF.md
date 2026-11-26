@@ -1,11 +1,11 @@
 # Riemann Sketchpad — Handoff Document
 
-**Date:** 2026-11-15
+**Date:** 2026-11-26
 **Branch:** `main`
 
 ## Current State
 
-- **Build:** `./gradlew test` passes (all tests green). `build.gradle.kts` extracts version from `Main.kt`.
+- **Build:** `./gradlew test` passes (124 tests green, including SVG golden-file and PDF export tests). `build.gradle.kts` extracts version from `Main.kt`.
 - **Code:** Both checkpoints complete. Full application (`geometry/`, `model/`, `persistence/`, `ui/`, `export/`) implemented.
 - **Git:** Repository initialized. `.claude/` is gitignored (except `.claude/skills/`).
 - **Spec:** `docs/SPEC.md` and `docs/GEOMETRY.md` describe the full application design.
@@ -54,8 +54,12 @@ src/main/kotlin/riemannsketchpad/
     Sidebar.kt                     # Object list, constructions table, measurements table
     SketchpadApp.kt                # Full app shell with menus
   export/
-    ExportDialog.kt                # Canvas/Custom export dialog
-    ExportRenderer.kt              # PNG (snapshot) and SVG (manual XML) export
+    ExportDialog.kt                # Canvas/Custom export dialog, ExportFormat enum
+    ExportRenderer.kt              # PNG (snapshot) export; shared SVG/PDF scene walker
+    ExportCanvas.kt                # Internal drawing interface for the SVG/PDF walker
+    SvgExportCanvas.kt             # SVG backend (manual XML)
+    PdfExportCanvas.kt             # PDF backend (PDFBox, embedded DejaVu Sans)
+    BezierArcs.kt                  # Elliptical arc -> cubic Bezier conversion for PDF
     HeadlessExportApp.kt           # CLI --export mode
 
 src/test/kotlin/riemannsketchpad/
@@ -71,6 +75,11 @@ src/test/kotlin/riemannsketchpad/
   persistence/
     DiagramSerializerTest.kt
     ConstructionSerializerTest.kt
+  export/
+    ExportTestDiagrams.kt          # Programmatic diagrams shared by export tests
+    SvgExportSnapshotTest.kt       # Golden-file comparison (src/test/resources/export/svg/)
+    PdfExportTest.kt               # Parses PDF output back with PDFBox
+    BezierArcsTest.kt
 ```
 
 ## Implementation Checkpoints
@@ -215,6 +224,6 @@ Two bugs in `HitTester.isPointInAngleSector()`: (1) `mouseAngle` used Y-up conve
 
 `distanceToEllipseFrontHalf()` computed `modelZ = sqrt(1 - r²)` which is always positive inside the disk, so the `if (modelZ <= 0) continue` check never filtered anything. Root cause: screen-space points on a projected ellipse correspond to two 3D sphere points (front and back), so front-hemisphere filtering cannot be done from screen coordinates alone. Fixed by rewriting `distanceToGeodesic()` and `distanceToCircle()` to sample curves in 3D (using `circlePlaneBasis()` to get an orthonormal basis), call `isOnFrontHemisphere()` on the actual 3D point, then project to screen for distance measurement.
 
-### 6. PDF export not implemented yet (Planned)
+### ~~6. PDF export not implemented yet~~ (Implemented)
 
-The agreed design is in `docs/SPEC.md` §12.7. It uses PDFBox and a shared SVG/PDF rendering walker, with SVG snapshot tests added first; PNG stays on `GeometryRenderer`. Pages are W×H points, and headless export writes 6 files. Targets v1.1.0. Labels use embedded DejaVu Sans. Still open: PDF metadata and the PDF test approach.
+Implemented per `docs/SPEC.md` §12.7. SVG snapshot tests (`SvgExportSnapshotTest`) were added first, then the SVG half of `ExportRenderer` was refactored into a shared walker drawing through the internal `ExportCanvas` interface, with `SvgExportCanvas` (byte-identical to the old output) and `PdfExportCanvas` (PDFBox 3.0.8, arcs converted to cubic Béziers by `BezierArcs`) backends. PNG stays on `GeometryRenderer`. Pages are W×H points, labels use embedded DejaVu Sans (missing glyphs become `?` with a warning), metadata sets Creator `Riemann Sketchpad <version>` and Title from the file name, and headless export writes 6 files. PDFBox works within the existing jlink modules. To regenerate SVG goldens after an intended output change, run `UPDATE_GOLDENS=true ./gradlew test` and review the diff.

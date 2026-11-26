@@ -12,8 +12,9 @@ A desktop application for creating geometric constructions using compass and str
 | UI framework | JavaFX (OpenJFX) |
 | Rendering | JavaFX scene graph (Shape nodes in a transformed Group) |
 | Build tool | Gradle (Kotlin DSL) |
-| Testing | JUnit 5 (geometry library unit tests only) |
+| Testing | JUnit 5 (core engine unit tests, SVG export snapshot tests, PDF export tests) |
 | Serialization | kotlinx.serialization (JSON) |
+| PDF export | Apache PDFBox 3.0 with embedded DejaVu Sans label font |
 | Distribution | `jpackage` for native installer; also runnable via `./gradlew run` |
 | UI theme | AtlantaFX Primer Light (user agent stylesheet) |
 | Input | Desktop only (mouse), no touch support |
@@ -30,7 +31,7 @@ src/main/kotlin/riemannsketchpad/
   model/            # GeometricObjectManager, undo/redo, construction recording/applying
   persistence/      # JSON serialization/deserialization for diagrams and constructions
   ui/               # JavaFX views, canvas, tools, renderer, sidebar, toolbar
-  export/           # PNG and SVG export (dialog + renderer)
+  export/           # PNG, SVG and PDF export (dialog + renderer)
   Main.kt           # Application entry point; dispatches --export to HeadlessExportApp
 
 src/main/resources/
@@ -54,7 +55,7 @@ src/main/resources/
 | `Sidebar` | ui | Left pane (objects table) and right pane (constructions + measurements tables). |
 | `DiagramSerializer` | persistence | Serializes/deserializes the full diagram to/from JSON. |
 | `ConstructionSerializer` | persistence | Saves constructions and loads construction files into `LoadedConstruction` records. |
-| `ExportRenderer` | export | Renders to PNG (via JavaFX snapshot) or SVG (manual string generation). |
+| `ExportRenderer` | export | Renders to PNG (via JavaFX snapshot), or to SVG/PDF through a shared scene walker (see §12.7). |
 | `HeadlessExportApp` | export | CLI-driven headless export. Loads a diagram JSON and exports files. |
 
 ### 2.3 Coordinate System
@@ -675,7 +676,7 @@ Every JSON file includes top-level `"appName"` and `"version"` fields. The `appN
 Non-modal dialog with:
 
 - **Method**: 2 radio buttons (Canvas, Custom).
-- **Format**: 2 radio buttons (PNG, SVG).
+- **Format**: 3 radio buttons (PNG, SVG, PDF), backed by the `ExportFormat` enum.
 - **Options**: "Transparent background" checkbox, "Include grid" checkbox, "Include back face" checkbox (transparent background and back face default off; grid default on).
 - **Dimensions** (varies by method, see below).
 - **Buttons**: Export, Cancel.
@@ -711,7 +712,7 @@ When Custom method is selected, a crop overlay is displayed on the canvas:
 
 ### 12.5 Export Rendering
 
-Both PNG and SVG exports share the same rendering logic:
+PNG, SVG and PDF exports share the same rendering logic:
 
 - Selection and hover states are cleared (all objects render in their per-object color).
 - 5 passes: regions, angles, geodesics/circles, points, labels.
@@ -719,8 +720,11 @@ Both PNG and SVG exports share the same rendering logic:
 - Per-object styles (color, size, stroke style, stroke thickness) are respected in exports.
 - Grid uses meridians and parallels.
 - Background: white sphere on gray exterior (or transparent).
+- Output size: W×H pixels for PNG; W×H user units for SVG; W×H points for PDF.
 
 **PNG**: builds a JavaFX `Group`, takes a snapshot via `Node.snapshot()`, writes via `ImageIO`.
+
+**SVG and PDF**: a shared scene walker in `ExportRenderer` emits the grid, the 5 passes, silhouette split rendering and back-face opacity through the internal `ExportCanvas` drawing interface, which has an SVG backend (`SvgExportCanvas`) and a PDF backend (`PdfExportCanvas`). See §12.7 for PDF details.
 
 **SVG**: generates SVG XML string manually. Points -> `<circle>`, geodesics -> `<path>` (elliptical arc), circles -> `<ellipse>`, angles -> `<path>` (arc), regions -> `<path>` (arcs), labels -> `<text>`. Numbers formatted to 2 decimal places.
 
@@ -733,24 +737,25 @@ Both PNG and SVG exports share the same rendering logic:
 - **diagram.json** (required): path to a diagram file.
 - **outputDir** (optional, default `exports/`): directory for output files.
 
-Produces 4 files: `<name>_canvas.png/svg` (default 700px diameter), `<name>_custom.png/svg` (1920px diameter). All exports use white-on-gray background, no grid.
+Produces 6 files: `<name>_canvas.png/svg/pdf` (default 700px diameter), `<name>_custom.png/svg/pdf` (1920px diameter). All exports use white-on-gray background, no grid. If a PDF label contains characters the embedded font lacks, a warning listing them is printed to stderr.
 
-### 12.7 PDF Export (Planned — v1.1.0, not yet implemented)
+### 12.7 PDF Export
 
-Agreed design for adding PDF as a third export format (mirrors Euclid Sketchpad §12.7, adapted to the sphere):
+PDF is the third export format, alongside PNG and SVG (mirrors Euclid Sketchpad §12.7, adapted to the sphere):
 
-- **Library**: Apache PDFBox 3.x (Apache 2.0) draws true vector output: paths, Bézier curves, dash patterns, fill and stroke transparency, text. Add it to `build.gradle.kts`, add its notice to `THIRD_PARTY_NOTICES`, and check that it runs within the hardcoded jpackage modules (`java.base`, `java.desktop`, `java.logging`, `jdk.unsupported`).
-- **Shared SVG/PDF rendering walker**: refactor the SVG half of `ExportRenderer` so that the grid (meridians/parallels), the 5-pass object logic, front/back split rendering (`buildSvgSplitArcs`), and the 0.3 back-face opacity are written once. They will call a small internal drawing interface (line, elliptical arc, ellipse, path with fill/alpha, text, dash) with SVG and PDF backends. PNG stays on `GeometryRenderer` + `Node.snapshot()` as today. Before refactoring, add snapshot tests for SVG output so the refactor can be checked for regressions.
-- **Elliptical arcs**: PDF has no arc operator, so the PDF backend converts each rotated elliptical arc (`radiusX`, `radiusY`, `xAxisRotation`, flags) into cubic Bézier segments (≤ 90° each).
+- **Library**: Apache PDFBox 3.0.x (`org.apache.pdfbox:pdfbox`, Apache 2.0) draws true vector output: paths, Bézier curves, dash patterns, fill and stroke transparency, text. Its notices (PDFBox, FontBox, Commons Logging) are in `THIRD_PARTY_NOTICES`. It runs within the hardcoded jpackage modules (`java.base`, `java.desktop`, `java.logging`, `jdk.unsupported`); no extra module was needed.
+- **Shared SVG/PDF rendering walker**: `ExportRenderer`'s scene walker writes the grid (meridians/parallels), the 5-pass object logic, front/back split rendering, and the back-face opacities (0.3 objects, 0.15 grid) once. It draws through the internal `ExportCanvas` interface: `strokeLine`, `strokeEllipse`, `strokePath`, `fillPath` (with optional 1px outline), `fillCircle`, `text`. Strokes carry color, width and a dashed flag (`[6, 4]`); fills are RGBA; each element takes an optional opacity. Paths are lists of `MoveTo`, `LineTo`, `ArcTo` (SVG endpoint parameters), `CircularArcTo` and `Close`. PNG stays on `GeometryRenderer` + `Node.snapshot()`. SVG snapshot tests (`SvgExportSnapshotTest`, goldens in `src/test/resources/export/svg/`) were added before the refactor and pass unchanged, so SVG output is byte-identical to the pre-PDF version.
+- **Elliptical arcs**: PDF has no arc operator, so `BezierArcs` converts each SVG-style endpoint arc (`rx`, `ry`, `xAxisRotation`, large-arc and sweep flags) to center parameterization (SVG 1.1 Appendix F.6.5, radii scaled up when too small) and emits cubic Bézier segments of at most 90° each. Full ellipses and point discs use 4 segments.
+- **Coordinates**: the content stream's transform is flipped (`[1 0 0 -1 0 H]`) so the walker's Y-down screen coordinates are used unchanged; text sets its own matrix to stay upright.
 - **Page size**: one page of exactly W×H points, matching the exported pixel dimensions 1:1 (Diameter×Diameter for Canvas, Width×Height for Custom; same semantics as SVG). No paper-size options.
-- **Transparent background**: applies to PDF as it does to SVG. When checked, no gray exterior or white background is drawn (the sphere disk is still drawn).
-- **Include back face**: honored exactly as in SVG.
-- **Label font**: DejaVu Sans (bundled TTF in `src/main/resources/fonts/`, license added to `THIRD_PARTY_NOTICES`), embedded via `PDType0Font.load()` so only the glyphs used are included. Same font in all three sister projects. Characters the font lacks (e.g. CJK, emoji) are replaced with `?` and the export shows a warning rather than failing. PNG and SVG label fonts are unchanged.
-- **Dialog**: add a third Format radio button (PDF) and a `*.pdf` file-chooser filter. Replace the `format` string with an `ExportFormat` enum.
-- **Headless export**: produces 6 files (2 methods × PNG/SVG/PDF). Update the "4 files" messages and the project skill docs.
-- **Release**: ships as v1.1.0 with CHANGELOG, README feature list, and HANDOFF updates.
-
-**Still open:** PDF metadata (title, creator) and the PDF test approach (for example, parsing the output back with PDFBox).
+- **Clipping and background**: content is clipped to the sphere disk. Unless transparent is checked, a `#E8E8E8` exterior and a white disk are filled first. When transparent is checked, no background is drawn, as in SVG.
+- **Opacity**: element opacity and RGBA fill/stroke alphas become `PDExtendedGraphicsState` stroking/non-stroking alpha constants.
+- **Include back face**: honored exactly as in SVG (same walker).
+- **Label font**: DejaVu Sans 2.37 (`src/main/resources/fonts/DejaVuSans.ttf`, license in `THIRD_PARTY_NOTICES`), embedded at 12pt via `PDType0Font.load()` so only the glyphs used are included. Same font in all three sister projects. Characters the font lacks (e.g. CJK) are replaced with `?`. `ExportRenderer.exportPdf()` returns the set of replaced characters instead of failing; the dialog shows a warning `Alert` listing them, and headless export prints a warning to stderr. PNG and SVG label fonts are unchanged.
+- **Metadata**: Creator is `Riemann Sketchpad <APP_VERSION>`; Title is the output file name without its extension.
+- **Dialog**: a third Format radio button (PDF) and a `*.pdf` file-chooser filter. The format is an `ExportFormat` enum (`PNG`, `SVG`, `PDF`) holding the label and file extension.
+- **Headless export**: produces 6 files (2 methods × PNG/SVG/PDF), see §12.6.
+- **Tests**: `PdfExportTest` parses the output back with PDFBox (`Loader.loadPDF`) and checks observable behavior: one page, mediabox equal to W×H, label text extractable with `PDFTextStripper` and positioned at the same anchor as in SVG, metadata present, missing glyphs reported and drawn as `?`, and background presence or absence (rendered with `PDFRenderer`: gray corner and white disk when opaque, fully transparent pixels when transparent). It avoids byte-level checks of the PDF. `BezierArcsTest` checks the arc conversion: endpoints match, sampled points lie on the ellipse, the arc passes through its parametric midpoint (correct flags), and too-small radii are scaled up.
 
 ---
 

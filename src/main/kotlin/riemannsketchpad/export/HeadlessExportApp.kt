@@ -68,6 +68,12 @@ class HeadlessApp : Application() {
                 manager, viewMatrix, canvasScale, canvasCenter, canvasCenter,
                 canvasDiam, canvasDiam, false, false
             )
+            val unsupported = linkedSetOf<String>()
+            unsupported += ExportRenderer.exportPdf(
+                File(outputDir, "${baseName}_canvas.pdf"),
+                manager, viewMatrix, canvasScale, canvasCenter, canvasCenter,
+                canvasDiam, canvasDiam, false, false
+            )
 
             // Custom export: 1920px diameter
             val customDiam = 1920
@@ -84,8 +90,16 @@ class HeadlessApp : Application() {
                 manager, viewMatrix, customScale, customCenter, customCenter,
                 customDiam, customDiam, false, false
             )
+            unsupported += ExportRenderer.exportPdf(
+                File(outputDir, "${baseName}_custom.pdf"),
+                manager, viewMatrix, customScale, customCenter, customCenter,
+                customDiam, customDiam, false, false
+            )
 
-            println("Export complete: ${outputDir.absolutePath}")
+            if (unsupported.isNotEmpty()) {
+                System.err.println("Warning: PDF label font has no glyph for ${unsupported.joinToString(" ")}; replaced with '?'")
+            }
+            println("Export complete (6 files: canvas/custom x PNG/SVG/PDF): ${outputDir.absolutePath}")
         } catch (e: Exception) {
             System.err.println("Export failed: ${e.message}")
             e.printStackTrace()

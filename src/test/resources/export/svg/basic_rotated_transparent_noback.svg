@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+<defs><clipPath id="sphere-clip"><circle cx="300.00" cy="300.00" r="270.00"/></clipPath></defs>
+<g clip-path="url(#sphere-clip)">
+<path d="M 224.68,334.27 L 69.16,220.92 L 202.62,521.88 Z" fill="rgba(255,235,59,0.3)" stroke="none"/>
+<path d="M 489.38,162.20 L 224.68,334.27 L 69.16,220.92 Z" fill="rgba(76,175,80,0.3)" stroke="none"/>
+<path d="M 224.68,334.27 L 202.68,322.39 A 25.00,25.00 0 1 1 218.59,358.52 Z" fill="rgba(156,39,176,0.3)" stroke="rgba(156,39,176,0.7)" stroke-width="1"/>
+<path d="M 56.56,183.21 A 270.00,64.74 25.63 0 0 543.44,416.79" fill="none" stroke="#000000" stroke-width="2.00"/>
+<path d="M 69.16,220.92 A 270.00,225.77 -114.85 0 0 202.62,521.88" fill="none" stroke="#F44336" stroke-width="3.00" stroke-dasharray="6,4"/>
+<ellipse cx="252.94" cy="321.41" rx="210.80" ry="200.66" fill="none" stroke="#795548" stroke-width="2.00" transform="rotate(65.53,252.94,321.41)"/>
+<path d="M 224.68,334.27 A 270.00,21.21 141.37 0 1 489.38,162.20" fill="none" stroke="#000000" stroke-width="1.00"/>
+<path d="M 199.90,550.76 A 183.36,91.23 -126.04 1 0 30.61,318.09" fill="none" stroke="#000000" stroke-width="2.00" stroke-dasharray="6,4"/>
+<circle cx="224.68" cy="334.27" r="4.00" fill="#000000" opacity="1.0"/>
+<circle cx="69.16" cy="220.92" r="6.00" fill="#4CAF50" opacity="1.0"/>
+<circle cx="202.62" cy="521.88" r="4.00" fill="#000000" opacity="1.0"/>
+<text x="234.68" y="324.27" font-size="12" fill="black">A</text>
+<text x="79.16" y="210.92" font-size="12" fill="black">B</text>
+<text x="212.62" y="511.88" font-size="12" fill="black">C&amp;&lt;&gt;</text>
+<text x="139.32" y="265.02" font-size="12" fill="black">l</text>
+<text x="463.66" y="346.20" font-size="12" fill="black">c</text>
+</g>
+</svg>

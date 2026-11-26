@@ -16,6 +16,12 @@ import riemannsketchpad.ui.SphereCanvasPane
 import java.io.File
 import kotlin.math.min
 
+enum class ExportFormat(val label: String, val extension: String) {
+    PNG("PNG", "png"),
+    SVG("SVG", "svg"),
+    PDF("PDF", "pdf")
+}
+
 class ExportDialog(
     private val canvas: SphereCanvasPane,
     private val manager: GeometricObjectManager,
@@ -25,7 +31,7 @@ class ExportDialog(
 
     // State
     private var method = "Canvas" // "Canvas" or "Custom"
-    private var format = "PNG"
+    private var format = ExportFormat.PNG
     private var transparent = false
     private var includeGrid = true
     private var includeBackFace = false
@@ -62,7 +68,9 @@ class ExportDialog(
         pngRadio.isSelected = true
         val svgRadio = RadioButton("SVG")
         svgRadio.toggleGroup = formatGroup
-        val formatBox = HBox(16.0, Label("Format:"), pngRadio, svgRadio)
+        val pdfRadio = RadioButton("PDF")
+        pdfRadio.toggleGroup = formatGroup
+        val formatBox = HBox(16.0, Label("Format:"), pngRadio, svgRadio, pdfRadio)
         formatBox.alignment = Pos.CENTER_LEFT
 
         // Options
@@ -126,8 +134,9 @@ class ExportDialog(
             customDimsBox.isVisible = true; customDimsBox.isManaged = true
             updateOverlay()
         }
-        pngRadio.setOnAction { format = "PNG" }
-        svgRadio.setOnAction { format = "SVG" }
+        pngRadio.setOnAction { format = ExportFormat.PNG }
+        svgRadio.setOnAction { format = ExportFormat.SVG }
+        pdfRadio.setOnAction { format = ExportFormat.PDF }
         transparentCb.setOnAction { transparent = transparentCb.isSelected }
         gridCb.setOnAction { includeGrid = gridCb.isSelected }
         backFaceCb.setOnAction { includeBackFace = backFaceCb.isSelected }
@@ -190,8 +199,7 @@ class ExportDialog(
     private fun doExport() {
         val chooser = FileChooser()
         chooser.title = "Export"
-        val ext = if (format == "PNG") "png" else "svg"
-        chooser.extensionFilters.add(FileChooser.ExtensionFilter("${format} Files", "*.$ext"))
+        chooser.extensionFilters.add(FileChooser.ExtensionFilter("${format.label} Files", "*.${format.extension}"))
         val file = chooser.showSaveDialog(stage) ?: return
 
         val viewMatrix = canvas.getViewMatrix()
@@ -202,11 +210,7 @@ class ExportDialog(
             val centerY = diameter / 2.0
             val scale = diameter / 2.0
 
-            if (format == "PNG") {
-                ExportRenderer.exportPng(file, manager, viewMatrix, scale, centerX, centerY, diameter, diameter, transparent, includeGrid, includeBackFace)
-            } else {
-                ExportRenderer.exportSvg(file, manager, viewMatrix, scale, centerX, centerY, diameter, diameter, transparent, includeGrid, includeBackFace)
-            }
+            exportTo(file, viewMatrix, scale, centerX, centerY, diameter, diameter)
         } else {
             // Custom method
             val scaleFactor = scalePercent / 100.0
@@ -220,15 +224,27 @@ class ExportDialog(
             val centerX = cropWidth / 2.0
             val centerY = cropHeight / 2.0
 
-            if (format == "PNG") {
-                ExportRenderer.exportPng(file, manager, viewMatrix, exportScale, centerX, centerY, customWidth, customHeight, transparent, includeGrid, includeBackFace)
-            } else {
-                ExportRenderer.exportSvg(file, manager, viewMatrix, exportScale, centerX, centerY, customWidth, customHeight, transparent, includeGrid, includeBackFace)
-            }
+            exportTo(file, viewMatrix, exportScale, centerX, centerY, customWidth, customHeight)
         }
 
         clearOverlay()
         stage.close()
+    }
+
+    private fun exportTo(file: File, viewMatrix: DoubleArray, scale: Double, centerX: Double, centerY: Double, width: Int, height: Int) {
+        when (format) {
+            ExportFormat.PNG -> ExportRenderer.exportPng(file, manager, viewMatrix, scale, centerX, centerY, width, height, transparent, includeGrid, includeBackFace)
+            ExportFormat.SVG -> ExportRenderer.exportSvg(file, manager, viewMatrix, scale, centerX, centerY, width, height, transparent, includeGrid, includeBackFace)
+            ExportFormat.PDF -> {
+                val unsupported = ExportRenderer.exportPdf(file, manager, viewMatrix, scale, centerX, centerY, width, height, transparent, includeGrid, includeBackFace)
+                if (unsupported.isNotEmpty()) {
+                    Alert(
+                        Alert.AlertType.WARNING,
+                        "The PDF label font has no glyph for these characters, so they were replaced with '?': ${unsupported.joinToString(" ")}"
+                    ).apply { initOwner(ownerStage) }.showAndWait()
+                }
+            }
+        }
     }
 
     private fun updateOverlay() {

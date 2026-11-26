@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500">
+<defs><clipPath id="sphere-clip"><circle cx="250.00" cy="250.00" r="225.00"/></clipPath></defs>
+<rect width="500" height="500" fill="#E8E8E8"/>
+<circle cx="250.00" cy="250.00" r="225.00" fill="white"/>
+<g clip-path="url(#sphere-clip)">
+<ellipse cx="250.00" cy="250.00" rx="225.00" ry="225.00" fill="none" stroke="#F44336" stroke-width="2.00" transform="rotate(-180.00,250.00,250.00)"/>
+<line x1="250.00" y1="475.00" x2="250.00" y2="25.00" stroke="#4CAF50" stroke-width="2.00" stroke-dasharray="6,4"/>
+<line x1="250.00" y1="115.00" x2="250.00" y2="385.00" stroke="#9C27B0" stroke-width="2.00"/>
+<ellipse cx="271.87" cy="228.13" rx="42.69" ry="42.27" fill="none" stroke="#795548" stroke-width="2.00" opacity="0.3" transform="rotate(-135.00,271.87,228.13)"/>
+<ellipse cx="250.00" cy="250.00" rx="135.00" ry="135.00" fill="none" stroke="#000000" stroke-width="2.00" transform="rotate(-180.00,250.00,250.00)"/>
+<circle cx="475.00" cy="250.00" r="4.00" fill="#000000" opacity="0.3"/>
+<circle cx="250.00" cy="25.00" r="4.00" fill="#000000" opacity="0.3"/>
+<circle cx="250.00" cy="250.00" r="4.00" fill="#000000" opacity="1.0"/>
+<circle cx="250.00" cy="115.00" r="4.00" fill="#000000" opacity="1.0"/>
+<circle cx="250.00" cy="385.00" r="4.00" fill="#000000" opacity="1.0"/>
+<circle cx="272.28" cy="227.72" r="4.00" fill="#000000" opacity="0.3"/>
+<circle cx="314.36" cy="228.55" r="4.00" fill="#000000" opacity="0.3"/>
+</g>
+</svg>
