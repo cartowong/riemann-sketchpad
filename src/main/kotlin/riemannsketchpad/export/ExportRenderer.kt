@@ -441,10 +441,14 @@ private class SceneWalker(
         val midInShort = normDiff(am - a1)
         val inShort = if (shortArc > 0) midInShort in 0.0..shortArc else midInShort in shortArc..0.0
         val sweep = normAngle(am - a1) <= normAngle(a2 - a1)
+        // Silhouette splits give exact half arcs (shortArc = ±π), where the sign of shortArc,
+        // and so inShort, depends on last-bit atan2 differences between platforms. The
+        // large-arc flag does not change a 180° arc, so pin it to keep output deterministic.
+        val largeArc = if (abs(abs(shortArc) - PI) < 1e-9) false else !inShort
 
         return listOf(
             PathSeg.MoveTo(s1x, s1y),
-            PathSeg.ArcTo(e.major, e.minor, e.rotDeg, !inShort, sweep, s2x, s2y)
+            PathSeg.ArcTo(e.major, e.minor, e.rotDeg, largeArc, sweep, s2x, s2y)
         )
     }
 
