@@ -119,8 +119,8 @@ Then retry `./gradlew run`. If the issue persists, check for stuck Java processe
 ```
 
 This produces a platform-specific installer:
-- **macOS**: `build/jpackage/RiemannSketchpad-1.0.0.dmg`
-- **Windows**: `build/jpackage/RiemannSketchpad-1.0.0.msi`
+- **macOS**: `build/jpackage/RiemannSketchpad-1.1.0.dmg`
+- **Windows**: `build/jpackage/RiemannSketchpad-1.1.0.msi`
 
 On macOS, you can also build just the `.app` bundle (faster, useful for testing):
 
