@@ -6,39 +6,39 @@
 <g clip-path="url(#sphere-clip)">
 <line x1="300.00" y1="570.00" x2="300.00" y2="30.00" stroke="#D9D9D9" stroke-width="0.5"/>
 <path d="M 300.00,570.00 A 270.00,135.00 -90.00 0 0 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
-<path d="M 300.00,570.00 A 270.00,135.00 -90.00 1 1 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
+<path d="M 300.00,570.00 A 270.00,135.00 -90.00 0 1 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
 <path d="M 300.00,570.00 A 270.00,233.83 -90.00 0 0 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
-<path d="M 300.00,570.00 A 270.00,233.83 -90.00 1 1 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
+<path d="M 300.00,570.00 A 270.00,233.83 -90.00 0 1 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
 <ellipse cx="300.00" cy="300.00" rx="270.00" ry="270.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" transform="rotate(-90.00,300.00,300.00)"/>
-<path d="M 300.00,30.00 A 270.00,233.83 90.00 1 0 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
+<path d="M 300.00,30.00 A 270.00,233.83 90.00 0 0 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
 <path d="M 300.00,30.00 A 270.00,233.83 90.00 0 1 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
-<path d="M 300.00,30.00 A 270.00,135.00 90.00 1 0 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
+<path d="M 300.00,30.00 A 270.00,135.00 90.00 0 0 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
 <path d="M 300.00,30.00 A 270.00,135.00 90.00 0 1 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
 <line x1="300.00" y1="30.00" x2="300.00" y2="570.00" stroke="#D9D9D9" stroke-width="0.5"/>
 <path d="M 300.00,30.00 A 270.00,135.00 90.00 0 1 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
-<path d="M 300.00,30.00 A 270.00,135.00 90.00 1 0 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
+<path d="M 300.00,30.00 A 270.00,135.00 90.00 0 0 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
 <path d="M 300.00,30.00 A 270.00,233.83 90.00 0 1 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
-<path d="M 300.00,30.00 A 270.00,233.83 90.00 1 0 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
+<path d="M 300.00,30.00 A 270.00,233.83 90.00 0 0 300.00,570.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
 <ellipse cx="300.00" cy="300.00" rx="270.00" ry="270.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" transform="rotate(90.00,300.00,300.00)"/>
-<path d="M 300.00,570.00 A 270.00,233.83 -90.00 1 1 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
+<path d="M 300.00,570.00 A 270.00,233.83 -90.00 0 1 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
 <path d="M 300.00,570.00 A 270.00,233.83 -90.00 0 0 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
-<path d="M 300.00,570.00 A 270.00,135.00 -90.00 1 1 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
+<path d="M 300.00,570.00 A 270.00,135.00 -90.00 0 1 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
 <path d="M 300.00,570.00 A 270.00,135.00 -90.00 0 0 300.00,30.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
-<path d="M 435.00,66.17 A 135.00,0.00 -180.00 1 1 165.00,66.17" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
-<path d="M 435.00,66.17 A 135.00,0.00 -180.00 1 1 165.00,66.17" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
-<path d="M 533.83,165.00 A 233.83,0.00 -180.00 1 1 66.17,165.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
-<path d="M 533.83,165.00 A 233.83,0.00 -180.00 1 1 66.17,165.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
+<path d="M 435.00,66.17 A 135.00,0.00 -180.00 0 1 165.00,66.17" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
+<path d="M 435.00,66.17 A 135.00,0.00 -180.00 0 1 165.00,66.17" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
+<path d="M 533.83,165.00 A 233.83,0.00 -180.00 0 1 66.17,165.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
+<path d="M 533.83,165.00 A 233.83,0.00 -180.00 0 1 66.17,165.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
 <path d="M 570.00,300.00 A 270.00,0.00 -180.00 0 1 30.00,300.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
 <path d="M 570.00,300.00 A 270.00,0.00 -180.00 0 1 30.00,300.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
-<path d="M 533.83,435.00 A 233.83,0.00 -180.00 1 1 66.17,435.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
-<path d="M 533.83,435.00 A 233.83,0.00 -180.00 1 1 66.17,435.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
-<path d="M 435.00,533.83 A 135.00,0.00 -180.00 1 1 165.00,533.83" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
-<path d="M 435.00,533.83 A 135.00,0.00 -180.00 1 1 165.00,533.83" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
+<path d="M 533.83,435.00 A 233.83,0.00 -180.00 0 1 66.17,435.00" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
+<path d="M 533.83,435.00 A 233.83,0.00 -180.00 0 1 66.17,435.00" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
+<path d="M 435.00,533.83 A 135.00,0.00 -180.00 0 1 165.00,533.83" fill="none" stroke="#D9D9D9" stroke-width="0.5" opacity="0.15"/>
+<path d="M 435.00,533.83 A 135.00,0.00 -180.00 0 1 165.00,533.83" fill="none" stroke="#D9D9D9" stroke-width="0.5"/>
 <path d="M 383.55,244.30 L 157.70,186.16 L 327.96,467.76 Z" fill="rgba(255,235,59,0.3)" stroke="none"/>
 <path d="M 355.70,216.45 L 383.55,244.30 L 157.70,186.16 Z" fill="rgba(76,175,80,0.3)" stroke="none"/>
 <path d="M 383.55,244.30 L 360.44,234.74 A 25.00,25.00 0 1 1 380.57,269.13 Z" fill="rgba(156,39,176,0.3)" stroke="rgba(156,39,176,0.7)" stroke-width="1"/>
 <path d="M 355.70,216.45 L 377.55,195.90 A 30.00,30.00 0 0 0 339.84,190.99 Z" fill="rgba(0,0,0,0.3)" stroke="rgba(0,0,0,0.7)" stroke-width="1" opacity="0.3"/>
-<path d="M 43.86,214.62 A 270.00,81.41 18.43 1 0 556.14,385.38" fill="none" stroke="#000000" stroke-width="2.00" opacity="0.3"/>
+<path d="M 43.86,214.62 A 270.00,81.41 18.43 0 0 556.14,385.38" fill="none" stroke="#000000" stroke-width="2.00" opacity="0.3"/>
 <path d="M 43.86,214.62 A 270.00,81.41 18.43 0 1 556.14,385.38" fill="none" stroke="#000000" stroke-width="2.00"/>
 <path d="M 157.70,186.16 A 270.00,79.28 -121.72 0 0 327.96,467.76" fill="none" stroke="#F44336" stroke-width="3.00" stroke-dasharray="6,4"/>
 <ellipse cx="352.20" cy="265.20" rx="210.80" ry="195.68" fill="none" stroke="#795548" stroke-width="2.00" transform="rotate(-123.69,352.20,265.20)"/>
